@@ -1,0 +1,18 @@
+<section data-ng-controller="SearchesController" data-ng-init="findOne()">
+    <span>{{search.created | date:'medium'}}</span> /
+    <span>{{search.user.name}}</span>
+            <ul>
+                <li data-ng-repeat="keyword in search.keywords">{{ keyword }}</li>
+            </ul>
+            <ul>
+                <li data-ng-repeat="user in search.users">{{ user }}</li>
+            </ul>
+    <div>
+        <a class="btn" href="/#!/searches/{{search._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+        <a class="btn" data-ng-click="remove();">
+            <i class="glyphicon glyphicon-trash"></i>
+        </a>
+    </div>
+</section>
