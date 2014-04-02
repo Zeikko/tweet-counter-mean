@@ -35,25 +35,45 @@ var twitter = new Twit({
 
 var Search = mongoose.model('Search');
 
-Search.find().sort('-created').exec(function(err, searches) {
-	if (err) {
-		res.render('error', {
-			status: 500
-		});
-	} else {
-		var keywords = [];
-		for (i in searches) {
-			keywords.push(searches[i].keywords);
-		}
-		console.log(keywords.join(','));
-		var stream = twitter.stream('statuses/filter', {
-			track: keywords.join(',')
-		})
-
-		stream.on('tweet', function(tweet) {
-			console.log(tweet)
-			var tweet = new Tweet(tweet);
-			tweet.save();
-		})
+var startStream = function(keywords) {
+	if(typeof stream !== 'undefined') {
+		stream.stop();
 	}
-});
+	stream = twitter.stream('statuses/filter', {
+		track: keywords.join(',')
+	});
+
+	stream.on('tweet', function(tweet) {
+		console.log(tweet.text)
+		var tweet = new Tweet(tweet);
+		tweet.save();
+	});
+}
+
+var updateKeywords = function(keywords) {
+	Search.find().sort('-created').exec(function(err, searches) {
+		if (err) {
+			res.render('error', {
+				status: 500
+			});
+		} else {
+			var newKeywords = [];
+			for (i in searches) {
+				newKeywords.push(searches[i].keywords);
+			}
+			console.log(newKeywords.join(','));
+			if (newKeywords != keywords) {
+				keywords = newKeywords;
+				startStream(keywords);
+			}
+		}
+	});
+}
+
+var keywords = [];
+var stream;
+
+updateKeywords(keywords);
+setInterval(function() {
+	updateKeywords(keywords);
+}, 60 * 1000);
