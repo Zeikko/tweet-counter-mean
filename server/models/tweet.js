@@ -11,15 +11,25 @@ var mongoose = require('mongoose'),
  * Tweet Schema
  */
 var TweetSchema = new Schema({
-    created_at: {
-        type: Date,
+    created_at: Date,
+    id: Number,
+    text: String,
+    in_reply_to_status_id: Number,
+    in_reply_to_user_id: {
+        type: Schema.ObjectId,
+        ref: 'TwitterUser'
     },
-    id: {
-        type: String,
+    retweet_count: Number,
+    favorite_count: Number,
+    user: {
+        type: Schema.ObjectId,
+        ref: 'TwitterUser'
     },
-    text: {
-        type: String,
-    }
+    hashtags: [String],
+    urls: [String],
+    symbols: [String],
+    user_mention: [String],
+    lang: String
 });
 
 mongoose.model('Tweet', TweetSchema);
