@@ -47,31 +47,13 @@ var startStream = function(keywords) {
 	});
 
 	stream.on('tweet', function(tweet) {
-		console.log(tweet.entities.urls);
-		console.log(tweet.entities.symbols);
-		console.log(tweet.entities.user_mention);
+		console.log(tweet.entities);
 		//TODO ADD ENTITIES
 		async.parallel({
-			//User posting
-			twitterUser: function(callback) {
-				TwitterUser.findOne({
-					id: tweet.user.id
-				}).exec(function(err, twitterUser) {
-					if (!twitterUser) {
-						var twitterUser = new TwitterUser(tweet.user);
-						twitterUser.save();
-					}
-					callback(err, twitterUser._id);
-
-				});
-			},
-			//User replied to
-			userRepliedTo: function(callback) {
-				if (!tweet.in_reply_to_user_id) {
-					callback(null, null);
-				} else {
+				//User posting
+				twitterUser: function(callback) {
 					TwitterUser.findOne({
-						id: tweet.in_reply_to_user_id
+						id: tweet.user.id
 					}).exec(function(err, twitterUser) {
 						if (!twitterUser) {
 							var twitterUser = new TwitterUser(tweet.user);
@@ -80,38 +62,65 @@ var startStream = function(keywords) {
 						callback(err, twitterUser._id);
 
 					});
-				}
-			},
-		}, function(err, results) {
-			//Tweet
-			tweet.in_reply_to_user_id = results.userRepliedTo;
-			tweet.user = results.twitterUser;
-			var hashtags = [];
-			for (i in tweet.entities.hashtags) {
-				hashtags.push(tweet.entities.hashtags[i].text);
-			}
-			tweet.hashtags = hashtags;
+				},
+				//User replied to
+				userRepliedTo: function(callback) {
+					if (!tweet.in_reply_to_user_id) {
+						callback(null, null);
+					} else {
+						TwitterUser.findOne({
+							id: tweet.in_reply_to_user_id
+						}).exec(function(err, twitterUser) {
+							if (!twitterUser) {
+								var twitterUser = new TwitterUser(tweet.user);
+								twitterUser.save();
+							}
+							callback(err, twitterUser._id);
 
-			var urls = [];
-			for (i in tweet.entities.urls) {
-				urls.push(tweet.entities.urls[i].expanded_url);
-			}
-			tweet.urls = urls;
-
-			tweet = new Tweet(tweet);
-			if (typeof tweet.retweeted_status !== 'undefined') {
-				Tweet.findOne({
-					id: tweet.retweeted_status
-				}, function(err, originalTweet) {
-					if (typeof originalTweet !== 'undefined') {
-						originalTweet.retweet_count++;
-						originalTweet.save();
+						});
 					}
-				});
-			} else {
-				tweet.save();
-			}
-		});
+				},
+			},
+			function(err, results) {
+				//Tweet
+				tweet.in_reply_to_user_id = results.userRepliedTo;
+				tweet.user = results.twitterUser;
+
+				//Hashtags
+				var hashtags = [];
+				for (i in tweet.entities.hashtags) {
+					hashtags.push(tweet.entities.hashtags[i].text);
+				}
+				tweet.hashtags = hashtags;
+
+				//Urls
+				var urls = [];
+				for (i in tweet.entities.urls) {
+					urls.push(tweet.entities.urls[i].expanded_url);
+				}
+				tweet.urls = urls;
+
+				//Media
+				var media = [];
+				for (i in tweet.entities.media) {
+					media.push(tweet.entities.media[i].media_url);
+				}
+				tweet.media = media;
+
+				tweet = new Tweet(tweet);
+				if (typeof tweet.retweeted_status !== 'undefined') {
+					Tweet.findOne({
+						id: tweet.retweeted_status
+					}, function(err, originalTweet) {
+						if (typeof originalTweet !== 'undefined') {
+							originalTweet.retweet_count++;
+							originalTweet.save();
+						}
+					});
+				} else {
+					tweet.save();
+				}
+			});
 	});
 }
 

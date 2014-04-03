@@ -27,8 +27,7 @@ var TweetSchema = new Schema({
     },
     hashtags: [String],
     urls: [String],
-    symbols: [String],
-    user_mention: [String],
+    media: [String],
     lang: String
 });
 
