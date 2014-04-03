@@ -8,7 +8,7 @@ angular.module('mean.searches').controller('SearchesController', ['$scope', '$st
             var search = new Searches({
                 name: this.name,
                 users: this.users,
-                keywords: this.keywords
+                hashtags: this.hashtags
             });
             search.$save(function(response) {
                 $location.path('searches/' + response._id);
@@ -16,7 +16,7 @@ angular.module('mean.searches').controller('SearchesController', ['$scope', '$st
 
             this.name = '';
             this.users = '';
-            this.keywords = '';
+            this.hashtags = '';
         };
 
         $scope.remove = function(search) {
@@ -59,5 +59,32 @@ angular.module('mean.searches').controller('SearchesController', ['$scope', '$st
                 $scope.search = search;
             });
         };
+
+        $scope.hashtags = [];
+        $scope.updateHashtagFields = function() {
+            if ($scope.newHashtag) {
+                $scope.hashtags.push($scope.newHashtag);
+                $scope.newHashtag = '';
+            }
+            for (var i in $scope.hashtags) {
+                if ($scope.hashtags[i].length === 0) {
+                    $scope.hashtags.splice([i]);
+                }
+            }
+        }
+
+        $scope.users = [];
+        $scope.updateUserFields = function() {
+            if ($scope.newUser) {
+                $scope.users.push($scope.newUser);
+                $scope.newUser = '';
+            }
+            for (var i in $scope.users) {
+                if ($scope.users[i].length === 0) {
+                    $scope.users.splice([i]);
+                }
+            }
+        }
+
     }
 ]);

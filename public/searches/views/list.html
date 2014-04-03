@@ -1,16 +1,9 @@
 <section data-ng-controller="SearchesController" data-ng-init="find()">
-	<ul class="searches unstyled">
-		<li data-ng-repeat="search in searches">
-			<span>{{search.created | date:'medium'}}</span> /
-			<span>{{search.user.name}}</span>
-			<a data-ng-href="#!/searches/{{search._id}}">{{search.name}}</a>
-		    <ul>
-		        <li data-ng-repeat="keyword in search.keywords">{{ keyword }}</li>
-		    </ul>
-		    <ul>
-		        <li data-ng-repeat="user in search.users">{{ user }}</li>
-		    </ul>
-		</li>
-	</ul>
-	<h1 data-ng-hide="!searches || searches.length">No searches yet. <br> Why don't you <a href="/#!/searches/create">Create One</a>?</h1>
+    <ul class="searches unstyled">
+        <li data-ng-repeat="search in searches">
+            <h3><a data-ng-href="#!/searches/{{search._id}}">{{search.name}}</a></h3>
+        </li>
+    </ul>
+    <h1 data-ng-hide="!searches || searches.length">No searches yet.
+        <br>Why don't you <a href="/#!/searches/create">Create One</a>?</h1>
 </section>

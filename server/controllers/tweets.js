@@ -26,7 +26,7 @@ exports.tweet = function(req, res, next, id) {
 exports.create = function(req, res) {
     var tweet = new Tweet(req.body);
     tweet.user = req.user;
-
+    console.log(tweet);
     tweet.save(function(err) {
         if (err) {
             return res.send('users/signup', {

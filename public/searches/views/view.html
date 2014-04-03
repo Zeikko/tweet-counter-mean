@@ -1,12 +1,21 @@
 <section data-ng-controller="SearchesController" data-ng-init="findOne()">
-    <span>{{search.created | date:'medium'}}</span> /
-    <span>{{search.user.name}}</span>
-            <ul>
-                <li data-ng-repeat="keyword in search.keywords">{{ keyword }}</li>
-            </ul>
-            <ul>
-                <li data-ng-repeat="user in search.users">{{ user }}</li>
-            </ul>
+    <h2>
+        <a data-ng-href="#!/searches/{{search._id}}">{{search.name}}</a>
+    </h2>
+    <div>Created at: {{search.created | date:'medium'}}</div>
+    <div>Created by: {{search.user.name}}</div>
+    <div ng-if="search.hashtags">
+        <h4>Hashtags</h4>
+        <ul>
+            <li data-ng-repeat="hashtag in search.hashtags">{{ hashtag }}</li>
+        </ul>
+    </div>
+    <div ng-if="search.users">
+        <h4>Users</h4>
+        <ul>
+            <li data-ng-repeat="user in search.users">{{ user }}</li>
+        </ul>
+    </div>
     <div>
         <a class="btn" href="/#!/searches/{{search._id}}/edit">
             <i class="glyphicon glyphicon-edit"></i>
@@ -15,4 +24,6 @@
             <i class="glyphicon glyphicon-trash"></i>
         </a>
     </div>
+
+    </li>
 </section>

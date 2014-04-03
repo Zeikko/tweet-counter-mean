@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
  */
 var SearchSchema = new Schema({
     name: String,
-    keywords: [String],
+    hashtags: [String],
     users: [String],
     user: {
         type: Schema.ObjectId,

@@ -24,16 +24,8 @@ exports.search = function(req, res, next, id) {
  * Create an search
  */
 exports.create = function(req, res) {
-    var search = new Search();
-    search.name = req.body.name;
+    var search = new Search(req.body);
     search.user = req.user;
-    if (req.body.users) {
-        search.users = req.body.users.split(',');
-    }
-    if (req.body.keywords) {
-        search.keywords = req.body.keywords.split(',');
-    }
-
     search.save(function(err) {
         if (err) {
             return res.send('users/signup', {
