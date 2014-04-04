@@ -6,18 +6,20 @@
 				<input type="text" class="form-control" data-ng-model="search.name" id="name" placeholder="Name">
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="hashtags" class="col-md-2 control-label">Hashtags</label>
-			<div class="col-md-10">
-				<textarea data-ng-model="search.hashtags" id="hashtags" cols="30" rows="10" placeholder="Hashtags" class="form-control"></textarea>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="users" class="col-md-2 control-label">Users</label>
-			<div class="col-md-10">
-				<textarea data-ng-model="search.users" id="users" cols="30" rows="10" placeholder="Users" class="form-control"></textarea>
-			</div>
-		</div>
+        <div class="form-group">
+            <label for="hashtags" class="col-md-2 control-label">Hashtags</label>
+            <div class="col-md-10">
+                <input ng-model="hashtags[$index]" ng-repeat="hashtag in hashtags track by $index" id="hashtags[{{$index}}]" ng-change="updateHashtagFields()" placeholder="Hashtag" class="form-control" value="{{hashtag}}" focus-me="{{$last}}" />
+                <input ng-model="newHashtag" ng-change="updateHashtagFields()" id="hashtags" placeholder="Hashtag" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="users" class="col-md-2 control-label">Users</label>
+            <div class="col-md-10">
+                <input ng-model="users[$index]" ng-repeat="user in users track by $index" id="users[{{$index}}]" ng-change="updateUserFields()" placeholder="User" class="form-control" value="{{user}}" focus-me="{{$last}}" />
+                <input ng-model="newUser" ng-change="updateUserFields()" id="users" placeholder="User" class="form-control" />
+            </div>
+        </div>
 		<div class="form-group">
 			<div class="col-md-offset-2 col-md-10">
 				<button type="submit" class="btn btn-default">Submit</button>

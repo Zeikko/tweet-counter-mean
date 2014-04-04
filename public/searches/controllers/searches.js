@@ -57,6 +57,8 @@ angular.module('mean.searches').controller('SearchesController', ['$scope', '$st
                 searchId: $stateParams.searchId
             }, function(search) {
                 $scope.search = search;
+                $scope.hashtags = search.hashtags;
+                $scope.users = search.users;
             });
         };
 
