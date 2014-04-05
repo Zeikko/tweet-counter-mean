@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('mean.searches').controller('SearchesController', ['$scope', '$stateParams', '$location', 'Global', 'Searches',
-    function($scope, $stateParams, $location, Global, Searches) {
+angular.module('mean.searches').controller('SearchesController', ['$scope', '$stateParams', '$location', 'Global', 'Searches', 'TweetCount',
+    function($scope, $stateParams, $location, Global, Searches, TweetCount) {
         $scope.global = Global;
 
         $scope.create = function() {
@@ -60,6 +60,27 @@ angular.module('mean.searches').controller('SearchesController', ['$scope', '$st
                 $scope.hashtags = search.hashtags;
                 $scope.users = search.users;
             });
+            TweetCount.get({
+                searchId: $stateParams.searchId
+            }, function(tweetCount) {
+                //TODO Move to somewhere else
+                var serie = {
+                    label: 'Tweets',
+                    data: []
+                };
+                console.log(tweetCount.history);
+                for (var i in tweetCount.history) {
+                    console.log(tweetCount.history[i].time);
+                    console.log(moment(tweetCount.history[i].time).valueOf())
+                    serie.data.push([
+                        moment(tweetCount.history[i].time).valueOf(),
+                        tweetCount.history[i].value
+                    ]);
+                };
+                tweetCount.history = [serie];
+
+                $scope.tweetCount = tweetCount;
+            })
         };
 
         $scope.hashtags = [];

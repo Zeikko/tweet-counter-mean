@@ -1,3 +1,9 @@
 .searches {
 	list-style: none;
 }
+
+timeserieschart {
+	height: 300px;
+	width: 600px;
+	display: block;
+}

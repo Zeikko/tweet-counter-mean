@@ -19,6 +19,8 @@ module.exports = function(app) {
     app.get('/searches/:searchId', searches.show);
     app.put('/searches/:searchId', authorization.requiresLogin, hasAuthorization, searches.update);
     app.del('/searches/:searchId', authorization.requiresLogin, hasAuthorization, searches.destroy);
+    app.get('/searches/:searchId/tweets',  authorization.requiresLogin, searches.tweets);
+    app.get('/searches/:searchId/tweetcount',  authorization.requiresLogin, searches.tweetCount);
 
     // Finish with setting up the searchId param
     app.param('searchId', searches.search);
